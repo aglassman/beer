@@ -55,6 +55,9 @@ Install the following packages.
 **Install [Django Extensions](https://github.com/django-extensions/django-extensions):**  
 	sudo pip install django-extensions  
 
+**Install Django Filter**
+	sudo pip install django-filter
+
 ---
 
 Clone code from GitHub.

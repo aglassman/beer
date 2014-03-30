@@ -3,20 +3,18 @@ from rest_framework import serializers
 from models import *
 
 user_fields = (
-			'url',
         	'id', 
         	'username')
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = user_fields
 
-class AdminUserSerializer(serializers.HyperlinkedModelSerializer):
+class AdminUserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = (
-			'url',
 			'id',
 			'username',
 			'email',
@@ -24,35 +22,31 @@ class AdminUserSerializer(serializers.HyperlinkedModelSerializer):
 			'is_staff',
 			'is_active',)
 
-class StyleSerializer(serializers.HyperlinkedModelSerializer):
+class StyleSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Style
 		fields = (
-			'url',
 			'id',
 			'style',
 			'description')
 
-class GlassTypeSerializer(serializers.HyperlinkedModelSerializer):
+class GlassTypeSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = GlassType
 		fields = (
-			'url',
 			'id',
 			'glass_type',
 			'description')
 
-class BrewerySerializer(serializers.HyperlinkedModelSerializer):
+class BrewerySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Brewery
 		fields = (
-			'url',
 			'id',
 			'name',
 			'brewery_location')
 
 beer_fields = (
-			'url',
 			'id',
 			'created_at',
 			'added_by_user',
@@ -65,12 +59,12 @@ beer_fields = (
 			'glass_type',
 			'description')
 
-class BeerSerializer(serializers.HyperlinkedModelSerializer):
+class BeerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Beer
 		fields = beer_fields
 
-class DeepBeerSerializer(serializers.HyperlinkedModelSerializer):
+class DeepBeerSerializer(serializers.ModelSerializer):
 	brewery = BrewerySerializer()
 	style = StyleSerializer()
 	glass_type = GlassTypeSerializer()
@@ -81,8 +75,8 @@ class DeepBeerSerializer(serializers.HyperlinkedModelSerializer):
 		depth=1
 
 beer_review_fields = (
-			'url',
 			'id',
+			'created_at',
 			'user',
 			'beer',
 			'aroma',
@@ -92,12 +86,12 @@ beer_review_fields = (
 			'bottle_style',
 			'comments')
 
-class BeerReviewSerializer(serializers.HyperlinkedModelSerializer):
+class BeerReviewSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = BeerReview
 		fields = beer_review_fields
 
-class DeepBeerReviewSerializer(serializers.HyperlinkedModelSerializer):
+class DeepBeerReviewSerializer(serializers.ModelSerializer):
 	user = UserSerializer()
 	beer = BeerSerializer()
 
@@ -107,17 +101,16 @@ class DeepBeerReviewSerializer(serializers.HyperlinkedModelSerializer):
 		depth=1
 
 favorite_fields = (
-			'url',
 			'id',
 			'user',
 			'beer',)
 
-class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
+class FavoriteSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Favorite
 		fields = favorite_fields
 
-class DeepFavoriteSerializer(serializers.HyperlinkedModelSerializer):
+class DeepFavoriteSerializer(serializers.ModelSerializer):
 	user = UserSerializer()
 	beer = BeerSerializer()
 	
