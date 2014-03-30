@@ -57,32 +57,32 @@ class BeerReview(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	aroma = models.IntegerField(
 			validators=[
-				MaxValueValidator(1),
-				MinValueValidator(5),
+				MaxValueValidator(5),
+				MinValueValidator(1),
 			]
 		)
 	appearance = models.IntegerField(
 			validators=[
-				MaxValueValidator(1),
-				MinValueValidator(5),
+				MaxValueValidator(5),
+				MinValueValidator(1),
 			]
 		)
 	taste = models.IntegerField(
 			validators=[
-				MaxValueValidator(1),
-				MinValueValidator(10),
+				MaxValueValidator(10),
+				MinValueValidator(1),
 			]
 		)
 	palate = models.IntegerField(
 			validators=[
-				MaxValueValidator(1),
-				MinValueValidator(5),
+				MaxValueValidator(5),
+				MinValueValidator(1),
 			]
 		)
 	bottle_style = models.IntegerField(
 			validators=[
-				MaxValueValidator(1),
-				MinValueValidator(5),
+				MaxValueValidator(5),
+				MinValueValidator(1),
 			]
 		)
 	comments =  models.TextField(max_length=5000)

@@ -115,7 +115,7 @@ NOTE: If apache version is pre 2.4.x, use 'Allow from all' rather than 'Require 
 	        Allow from all
 	    </Directory>
 
-	    WSGIScriptAlias /beer /home/beer/beer/django_beer/django_beer/wsgi.py
+	    WSGIScriptAlias /beer_api /home/beer/beer/django_beer/django_beer/wsgi.py
 
 	    <Directory /home/beer/beer/django_beer/django_beer>
 	        <Files wsgi.py>
