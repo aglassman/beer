@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import permissions
+from beer_api import permissions as custom_permissions
 from rest_framework import viewsets
 from rest_framework import decorators
 from rest_framework import status
@@ -8,20 +9,49 @@ from beer_api.serializers import *
 from models import *
 import datetime
 
-
-class UserViewSet(viewsets.ModelViewSet):
+class AdminUserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
     queryset = User.objects.all()
+    serializer_class = AdminUserSerializer
+    permission_classes = [custom_permissions.IsAdminOrReadOnly]
+
+    def create(self,request):
+        serializer = AdminUserSerializer(data=request.DATA)
+        if serializer.is_valid():
+            new_user = User.objects.create_user(
+                serializer.data['username'],
+                serializer.data['email'],
+                serializer.data['password'])
+            new_user.is_staff = serializer.data['is_staff']
+            new_user.is_active = serializer.data['is_active']
+            new_user.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        else:
+            content = {'detail':'User creation failed.'}
+            return Response(content,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows users to be viewed.
+    """
+    queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
 
     @decorators.link()
     def favorites(self,request,pk=None):
         user = User.objects.filter(id=pk)
         favorites = Favorite.objects.filter(user=user)
         serializer = FavoriteSerializer(favorites, many=True)
+        return Response(serializer.data)
+
+    @decorators.link()
+    def beer_contributions(self,request,pk=None):
+        user = User.objects.filter(id=pk)
+        beers = Beer.objects.filter(added_by_user=user)
+        serializer = BeerSerializer(beers, many=True)
         return Response(serializer.data)
 
 
@@ -61,12 +91,25 @@ class BeerViewSet(viewsets.ModelViewSet):
         max_beers_per_day=1
         user = request.user
         yesterday = datetime.date.today() - datetime.timedelta(days=1)
-        beers_added_today = Beer.objects.filter(created_at__gte=yesterday)
+        beers_added_today = Beer.objects.filter(
+                added_by_user=user
+            ).filter(
+                created_at__gte=yesterday
+            )
         if len(beers_added_today) >= max_beers_per_day:
             content = {'detail':'You added the maximum amout of beers for today, try again tomorrow'}
             return Response(content,status=status.HTTP_403_FORBIDDEN)
         else:
-            return super(BeerViewSet,self).create(request)
+            serializer = BeerSerializer(data=request.DATA)
+            if serializer.is_valid():
+                serializer.save()
+                beer = Beer.objects.get(pk=serializer.data['id'])
+                beer.added_by_user = user
+                beer.save()
+                outserializer = BeerSerializer(beer)
+                return Response(outserializer.data,status=status.HTTP_201_CREATED)
+            content = {'detail':'Failed to create beer.'}
+            return Response(content,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @decorators.link()
     def deep(self,request,pk=None):

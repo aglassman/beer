@@ -5,13 +5,24 @@ from models import *
 user_fields = (
 			'url',
         	'id', 
-        	'username', 
-        	'email', )
+        	'username')
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = user_fields
+
+class AdminUserSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = User
+		fields = (
+			'url',
+			'id',
+			'username',
+			'email',
+			'password',
+			'is_staff',
+			'is_active',)
 
 class StyleSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
@@ -43,6 +54,8 @@ class BrewerySerializer(serializers.HyperlinkedModelSerializer):
 beer_fields = (
 			'url',
 			'id',
+			'created_at',
+			'added_by_user',
 			'name',
 			'ibu',
 			'calories',
@@ -61,7 +74,7 @@ class DeepBeerSerializer(serializers.HyperlinkedModelSerializer):
 	brewery = BrewerySerializer()
 	style = StyleSerializer()
 	glass_type = GlassTypeSerializer()
-
+	added_by_user = UserSerializer()
 	class Meta:
 		model = Beer
 		fields = beer_fields

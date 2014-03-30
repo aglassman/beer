@@ -6,6 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 router = routers.DefaultRouter()
+router.register(r'user_admin', views.AdminUserViewSet,base_name='user_admin')
 router.register(r'users', views.UserViewSet)
 router.register(r'styles', views.StyleViewSet)
 router.register(r'glass_types', views.GlassTypeViewSet)
@@ -20,6 +21,5 @@ urlpatterns = patterns('',
 	url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^beer/(?P<id>\d+)/reviews/$',views.beer_reviews),
 
 )
