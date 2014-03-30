@@ -19,41 +19,41 @@ Install the following packages.
 ------------------------------
 
 **Install pip:**  
-	wget "https://raw.github.com/pypa/pip/master/contrib/get-pip.py" --no-check-certificate
-	sudo python get-pip.py
+	wget "https://raw.github.com/pypa/pip/master/contrib/get-pip.py" --no-check-certificate  
+	sudo python get-pip.py  
 
 
 **Install PostgreSQL:**  
-	sudo apt-get install postgresql
+	sudo apt-get install postgresql  
 
 **Create database:**  
-	sudo su postgres
-	createdb beer
-	psql beer
-	\password admin
-	(enter password)
+	sudo su postgres  
+	createdb beer  
+	psql beer  
+	\password admin  
+	(enter password)  
 
 **Install connectors:**  
-	sudo apt-get install libpq-dev python-dev
-	sudo pip install psycopg2
+	sudo apt-get install libpq-dev python-dev  
+	sudo pip install psycopg2  
 
 **Install Django:**  
-	sudo pip install Django==1.6.2
+	sudo pip install Django==1.6.2  
 
 **Install Apache:**  
-	sudo apt-get install apache2
-	sudo apt-get install libapache2-mod-wsgi
+	sudo apt-get install apache2  
+	sudo apt-get install libapache2-mod-wsgi  
 
 **Install Git:**  
-	sudo apt-get install git
+	sudo apt-get install git  
 
 **Install [Django ReST framework](http://www.django-rest-framework.org/):**  
-	sudo pip install djangorestframework
-	sudo pip install markdown
-	sudo pip install django-filter
+	sudo pip install djangorestframework  
+	sudo pip install markdown  
+	sudo pip install django-filter  
 
 **Install [Django Extensions](https://github.com/django-extensions/django-extensions):**  
-	sudo pip install django-extensions
+	sudo pip install django-extensions  
 
 ---
 
