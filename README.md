@@ -3,7 +3,6 @@ beer
 
 A simple ReST service to manage Milwaukee's favorite beverages.
 
----
 
 Install
 =======
@@ -52,6 +51,9 @@ Install the following packages.
 	sudo pip install djangorestframework
 	sudo pip install markdown
 	sudo pip install django-filter
+
+**Install [Django Extensions](https://github.com/django-extensions/django-extensions):**  
+	sudo pip install django-extensions
 
 ---
 

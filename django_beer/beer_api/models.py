@@ -1,3 +1,95 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
 
-# Create your models here.
+class Style(models.Model):
+	style = models.CharField(max_length=100)
+	description =  models.TextField(max_length=5000)
+
+
+class GlassType(models.Model):
+	glass_type = models.CharField(max_length=100)
+	description =  models.TextField(max_length=5000)
+
+class Brewery(models.Model):
+	added_by_user = models.ForeignKey(User)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	name = models.CharField(max_length=200)
+	brewery_location = models.CharField(max_length=1000)
+
+	class Meta:
+		verbose_name = 'Brewery'
+		verbose_name_plural = 'Breweries'
+
+class Beer(models.Model):
+	added_by_user = models.ForeignKey(User)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	name = models.CharField(max_length=200)
+	ibu = models.IntegerField(
+			validators=[
+				MaxValueValidator(100),
+				MinValueValidator(0),
+			]
+		)
+	calories = models.IntegerField(
+			validators=[
+				MinValueValidator(0),
+			]
+		)
+	abv = models.DecimalField(
+		max_digits=5,
+		decimal_places=2,
+		validators=[
+				MaxValueValidator(100),
+				MinValueValidator(0),
+			])
+	brewery = models.ForeignKey(Brewery)
+	style = models.ForeignKey(Style)
+	glass_type = models.ForeignKey(GlassType)
+	description =  models.TextField(max_length=5000)
+
+class BeerReview(models.Model):
+	user = models.ForeignKey(User)
+	beer = models.ForeignKey(Beer)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	aroma = models.IntegerField(
+			validators=[
+				MaxValueValidator(1),
+				MinValueValidator(5),
+			]
+		)
+	appearance = models.IntegerField(
+			validators=[
+				MaxValueValidator(1),
+				MinValueValidator(5),
+			]
+		)
+	taste = models.IntegerField(
+			validators=[
+				MaxValueValidator(1),
+				MinValueValidator(10),
+			]
+		)
+	palate = models.IntegerField(
+			validators=[
+				MaxValueValidator(1),
+				MinValueValidator(5),
+			]
+		)
+	bottle_style = models.IntegerField(
+			validators=[
+				MaxValueValidator(1),
+				MinValueValidator(5),
+			]
+		)
+	comments =  models.TextField(max_length=5000)
+
+class Favorite(models.Model):
+	user = models.ForeignKey(User)
+	created_at = models.DateTimeField(auto_now_add=True)
+	beer = models.ForeignKey(Beer)
+
+
