@@ -11,6 +11,8 @@ import datetime
 import logging
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import filters
+from rest_framework import generics
+from rest_framework.views import APIView
 
 logger = logging.getLogger('beer')
 
@@ -48,42 +50,6 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = (filters.OrderingFilter,)
-    @decorators.link()
-    def favorites(self,request,pk=None):
-        deep =  deepTest(request)
-        user = User.objects.filter(id=pk)
-        favorites = Favorite.objects.filter(user=user)
-        serializer = None 
-        if deep:
-            serializer = DeepFavoriteSerializer(favorites, many=True)
-        else:
-            serializer = FavoriteSerializer(favorites, many=True)
-        return Response(serializer.data)
-
-    @decorators.link()
-    def beer_contributions(self,request,pk=None):
-        deep =  deepTest(request)
-        user = User.objects.filter(id=pk)
-        beers = Beer.objects.filter(added_by_user=user)
-        serializer = None
-        if deep:
-            serializer = DeepBeerSerializer(beers, many=True)
-        else:
-            serializer = BeerSerializer(beers, many=True)
-        return Response(serializer.data)
-
-    @decorators.link()
-    def beer_reviews(self,request,pk=None):
-        deep =  deepTest(request)
-        user = User.objects.filter(id=pk)
-        beers = BeerReview.objects.filter(user=user)
-        serializer = None
-        if deep:
-            serializer = DeepBeerReviewSerializer(beers, many=True)
-        else:
-            serializer = BeerReviewSerializer(beers, many=True)
-        return Response(serializer.data)
-
 
 class StyleViewSet(viewsets.ModelViewSet):
     """
@@ -157,88 +123,6 @@ class BeerViewSet(viewsets.ModelViewSet):
         else:
             serializer = BeerSerializer(beer)
         return Response(serializer.data)
-
-    @decorators.link()
-    def favorited_by(self,request,pk=None):
-        """
-        List all users who have favorited this beer
-        """
-        try:
-            beer = Beer.objects.get(id=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        favorites = Favorite.objects.filter(beer=beer)
-        users = []
-        for favorite in favorites:
-            users.append(favorite.user)
-        serializer = UserSerializer(users,many=True)
-        return Response(serializer.data)
-
-    @decorators.link()
-    def reviews(self,request,pk=None):
-        """
-        List all reviews for a particular beer.
-        """
-        deep =  deepTest(request)
-        
-        try:
-            beer = Beer.objects.get(id=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        beerReviews = BeerReview.objects.filter(beer=beer)
-        serializer = None
-        if deep:
-            serializer = DeepBeerReviewSerializer(beerReviews, many=True)
-        else:
-            serializer = BeerReviewSerializer(beerReviews, many=True)
-        return Response(serializer.data)
-
-    @decorators.link()
-    def overall(self,request,pk=None):
-        """
-        Average all reviews for a particular beer.
-        """
-        deep =  deepTest(request)        
-        
-        try:
-            beer = Beer.objects.get(id=pk)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        beerReviews = BeerReview.objects.filter(beer=beer)
-        aroma = 0
-        appearance = 0
-        taste = 0
-        palate = 0
-        bottle_style = 0
-        num_reviews = len(beerReviews)
-        
-        for beerReview in beerReviews:
-            aroma += beerReview.aroma
-            appearance += beerReview.appearance
-            taste += beerReview.taste
-            palate += beerReview.palate
-            bottle_style += beerReview.bottle_style
-
-
-        averageReview = BeerReview()
-        averageReview.beer = beer
-        averageReview.aroma = int(round(aroma/num_reviews))
-        averageReview.appearance = int(round(appearance/num_reviews))
-        averageReview.taste = int(round(taste/num_reviews))
-        averageReview.palate =int(round(palate/num_reviews))
-        averageReview.bottle_style = int(round(bottle_style/num_reviews))
-        averageReview.comments = 'Results based on %s reviews' % (num_reviews)
-
-        serializer = None
-        if deep:
-            serializer = DeepBeerReviewSerializer(averageReview)
-        else:
-            serializer = BeerReviewSerializer(averageReview)
-        return Response(serializer.data)
-
 
 class BeerReviewViewSet(viewsets.ModelViewSet):
     """
@@ -350,3 +234,139 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         content = {'detail':'Failed to create favorite.'}
         return Response(content,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class UserFavoriteListView(generics.ListAPIView):
+    serializer_class = FavoriteSerializer
+    filter_backends = (filters.OrderingFilter,)
+    
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        try:
+            user = User.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            user=None
+
+        favorites = Favorite.objects.filter(user=user)
+        
+        return favorites
+
+class UserBeerListView(generics.ListAPIView):
+    serializer_class = BeerSerializer
+    filter_backends = (filters.OrderingFilter,)
+    
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        try:
+            user = User.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            user=None
+
+        beers = Beer.objects.filter(added_by_user=user)
+        
+        return beers
+
+class UserBeerReviewListView(generics.ListAPIView):
+    serializer_class = BeerReviewSerializer
+    filter_backends = (filters.OrderingFilter,)
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        try:
+            user = User.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            user=None
+
+        beerReviews = BeerReview.objects.filter(user=user)
+        
+        return beerReviews
+
+
+class BeerFavoritesListView(generics.ListAPIView):
+    """
+    Returns list of users who have favorited this beer.
+    """
+
+    serializer_class = UserSerializer
+    filter_backends = (filters.OrderingFilter,)
+    
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        try:
+            beer = Beer.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            beer=None
+
+        favorites = Favorite.objects.filter(beer=beer)
+        users = []
+        for favorite in favorites:
+            users.append(favorite.user)
+        return users
+
+
+class BeerReviewListView(generics.ListAPIView):
+    """
+    List all reviews for a particular beer.
+    """
+
+    serializer_class = BeerReviewSerializer
+    filter_backends = (filters.OrderingFilter,)
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+
+        try:
+            beer = Beer.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        beerReviews = BeerReview.objects.filter(beer=beer)
+        return beerReviews
+
+
+class BeerReviewCalculated(APIView):
+    """
+    Average all reviews for a particular beer.
+    """
+
+    serializer_class = BeerReviewSerializer
+    
+    def get(self, request, format=None,pk=None):
+        deep = deepTest(request)
+        
+        try:
+            beer = Beer.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            content = {'detail':'You specified a beer that could not be found.'}
+            return Response(content,status=status.HTTP_404_NOT_FOUND)
+
+
+        beerReviews = BeerReview.objects.filter(beer=beer)
+        aroma = 0
+        appearance = 0
+        taste = 0
+        palate = 0
+        bottle_style = 0
+        num_reviews = len(beerReviews)
+        
+        for beerReview in beerReviews:
+            aroma += beerReview.aroma
+            appearance += beerReview.appearance
+            taste += beerReview.taste
+            palate += beerReview.palate
+            bottle_style += beerReview.bottle_style
+
+
+        averageReview = BeerReview()
+        averageReview.beer = beer
+        averageReview.aroma = int(round(aroma/num_reviews))
+        averageReview.appearance = int(round(appearance/num_reviews))
+        averageReview.taste = int(round(taste/num_reviews))
+        averageReview.palate =int(round(palate/num_reviews))
+        averageReview.bottle_style = int(round(bottle_style/num_reviews))
+        averageReview.comments = 'Results based on %s reviews' % (num_reviews)
+
+        serializer = None
+        if deep:
+            serializer = DeepBeerReviewSerializer(averageReview)
+        else:
+            serializer = BeerReviewSerializer(averageReview)
+        return Response(serializer.data)
