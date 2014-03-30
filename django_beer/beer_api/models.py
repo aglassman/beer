@@ -6,10 +6,15 @@ class Style(models.Model):
 	style = models.CharField(max_length=100)
 	description =  models.TextField(max_length=5000)
 
+	def __unicode__(self):
+		return self.style
 
 class GlassType(models.Model):
 	glass_type = models.CharField(max_length=100)
 	description =  models.TextField(max_length=5000)
+
+	def __unicode__(self):
+		return self.glass_type
 
 class Brewery(models.Model):
 	added_by_user = models.ForeignKey(User)
@@ -21,6 +26,10 @@ class Brewery(models.Model):
 	class Meta:
 		verbose_name = 'Brewery'
 		verbose_name_plural = 'Breweries'
+
+
+	def __unicode__(self):
+		return '%s - %s' % (self.name,self.brewery_location)
 
 class Beer(models.Model):
 	added_by_user = models.ForeignKey(User)
@@ -49,6 +58,10 @@ class Beer(models.Model):
 	style = models.ForeignKey(Style)
 	glass_type = models.ForeignKey(GlassType)
 	description =  models.TextField(max_length=5000)
+
+
+	def __unicode__(self):
+		return self.name
 
 class BeerReview(models.Model):
 	user = models.ForeignKey(User)
@@ -87,9 +100,13 @@ class BeerReview(models.Model):
 		)
 	comments =  models.TextField(max_length=5000)
 
+	def __unicode__(self):
+		return '%s - %s' % (self.id,self.beer)
+
 class Favorite(models.Model):
 	user = models.ForeignKey(User)
 	created_at = models.DateTimeField(auto_now_add=True)
 	beer = models.ForeignKey(Beer)
 
-
+	def __unicode__(self):
+		return '%s - %s' % (self.user,self.beer)

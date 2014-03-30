@@ -117,6 +117,54 @@ class BeerViewSet(viewsets.ModelViewSet):
         serializer = DeepBeerSerializer(beer)
         return Response(serializer.data)
 
+    @decorators.link()
+    def reviews(self,request,pk=None):
+        """
+        List all reviews for a particular beer.
+        """
+
+        if request.method == 'GET':
+            beer = Beer.objects.filter(id=pk)
+            beerReviews = BeerReview.objects.filter(beer=beer)
+            serializer = BeerReviewSerializer(beerReviews, many=True)
+            return Response(serializer.data)
+
+    @decorators.link()
+    def overall(self,request,pk=None):
+        """
+        List all reviews for a particular beer.
+        """
+
+        if request.method == 'GET':
+            beer = Beer.objects.get(pk=pk)
+            beerReviews = BeerReview.objects.filter(beer=beer)
+            aroma = 0
+            appearance = 0
+            taste = 0
+            palate = 0
+            bottle_style = 0
+            num_reviews = len(beerReviews)
+            
+            for beerReview in beerReviews:
+                aroma += beerReview.aroma
+                appearance += beerReview.appearance
+                taste += beerReview.taste
+                palate += beerReview.palate
+                bottle_style += beerReview.bottle_style
+
+
+            averageReview = BeerReview()
+            averageReview.beer = beer
+            averageReview.aroma = int(round(aroma/num_reviews))
+            averageReview.appearance = int(round(appearance/num_reviews))
+            averageReview.taste = int(round(taste/num_reviews))
+            averageReview.palate =int(round(palate/num_reviews))
+            averageReview.bottle_style = int(round(bottle_style/num_reviews))
+            averageReview.comments = 'Results based on %s reviews' % (num_reviews)
+            serializer = BeerReviewSerializer(averageReview)
+            return Response(serializer.data)
+
+
 class BeerReviewViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -143,16 +191,4 @@ class FavoriteViewSet(viewsets.ModelViewSet):
     def deep(self,request,pk=None):
         favorite = Favorite.objects.filter(id=pk)
         serializer = DeepFavoriteSerializer(favorite)
-        return Response(serializer.data)
-
-@decorators.api_view(('GET',))
-def beer_reviews(request,id):
-    """
-    List all reviews for a particular beer.
-    """
-
-    if request.method == 'GET':
-        beer = Beer.objects.filter(id=id)
-        beerReviews = BeerReview.objects.filter(beer=beer)
-        serializer = BeerReviewSerializer(beerReviews, many=True)
         return Response(serializer.data)
