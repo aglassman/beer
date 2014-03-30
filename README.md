@@ -3,56 +3,59 @@ beer
 
 A simple ReST service to manage Milwaukee's favorite beverages.
 
+---
+
 Install
 =======
 
-pre-requisites:
+**pre-requisites:**  
 Linux based OS, developed on:
 
 Linux version 2.6.32-5-686 (Debian 2.6.32-48squeeze4) (dannf@debian.org) (gcc version 4.3.5 (Debian 4.3.5-4) ) #1 SMP Mon Sep 23 23:00:18 UTC 2013 
 
 Python 2.6.5 or higher.
 
-------------------------------
-install the following packages
+
+Install the following packages.
 ------------------------------
 
-install pip:
+**Install pip:**  
 	wget "https://raw.github.com/pypa/pip/master/contrib/get-pip.py" --no-check-certificate
 	sudo python get-pip.py
 
 
-install postgres:
+**Install PostgreSQL:**  
 	sudo apt-get install postgresql
 
-create database:
+**Create database:**  
 	sudo su postgres
 	createdb beer
 	psql beer
 	\password admin
 	(enter password)
 
-install connectors:
+**Install connectors:**  
 	sudo apt-get install libpq-dev python-dev
 	sudo pip install psycopg2
 
-install Django:
+**Install Django:**  
 	sudo pip install Django==1.6.2
 
-install Apache:
+**Install Apache:**  
 	sudo apt-get install apache2
 	sudo apt-get install libapache2-mod-wsgi
 
-install Git:
+**Install Git:**  
 	sudo apt-get install git
 
-innstall Django REST framework:
+**Install [Django ReST framework](http://www.django-rest-framework.org/):**  
 	sudo pip install djangorestframework
 	sudo pip install markdown
 	sudo pip install django-filter
 
-----------------------
-Clone code from GitHub
+---
+
+Clone code from GitHub.
 ----------------------
 
 Create user for the project.
@@ -72,9 +75,10 @@ Change permissions on beer directory.
 	chmod 755 beer
 
 
-----------------------------
-configure your apache server
-----------------------------
+
+Configure  apache2 server.
+-------------------------
+
 add the following to httpd.conf, then restart server.
 
 NOTE: If apache version is pre 2.4.x, use 'Allow from all' rather than 'Require all granted'
@@ -119,8 +123,7 @@ NOTE: If apache version is pre 2.4.x, use 'Allow from all' rather than 'Require 
 	    </Directory>
 	</VirtualHost>
 
----------------------------------------
-create sym links for admin static files
+Create sym links for admin static files.
 ---------------------------------------
 cd /home/beer/beer/django_beer/static 
 
@@ -129,8 +132,7 @@ sudo ln -s '/usr/local/lib/{python_version}/dist-packages/django/contrib/admin/s
 sudo ln -s '/usr/local/lib/python2.6/dist-packages/rest_framework/static/rest_framework' rest_framework
 
 
------------------------------
-configure database connection
+Configure database connection.
 -----------------------------
 If needed, configure the database connection settings.
 
