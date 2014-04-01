@@ -17,7 +17,6 @@ class GlassType(models.Model):
 		return self.glass_type
 
 class Brewery(models.Model):
-	added_by_user = models.ForeignKey(User)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	name = models.CharField(max_length=200)

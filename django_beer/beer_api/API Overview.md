@@ -14,27 +14,27 @@ The following URIs are accessible by:
 URI | METHOD | ORDER ALLOWED | DEEP ALLOWED
 ----|-----|:---------:|:-------:
 /user_admin/ | [({GET,POST,HEAD,OPTIONS})]   | Y | 
-/user_admin/{id}/ | [({GET, PUT, PATCH, DELETE, HEAD, OPTIONS})]   |  | 
+/user_admin/{user_id}/ | [({GET, PUT, PATCH, DELETE, HEAD, OPTIONS})]   |  | 
 /users/ |  [GET,HEAD,OPTIONS]  | Y |  
-/users/{id}/ |  [GET,HEAD,OPTIONS]   |  | Y
+/users/{user_id}/ |  [GET,HEAD,OPTIONS]   |  | Y
 /styles/ |  [GET,HEAD,OPTIONS,(POST)]   | Y | 
-/styles/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | Y
+/styles/{style_id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | Y
 /glass_types/  | [GET,HEAD,OPTIONS,(POST)]   | Y | 
-/glass_types/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | 
+/glass_types/{glass_type_id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | 
 /breweries/ |  [GET,HEAD,OPTIONS,(POST)] | Y | 
-/breweries/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)] |  | 
+/breweries/{brewery_id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)] |  | 
 /beers/ |  [GET,HEAD,OPTIONS,(POST)] | Y | 
-/beers/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]  |  | Y
+/beers/{beer_id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]  |  | Y
 /beer_reviews/  | [GET,HEAD,OPTIONS,(POST)] | Y | 
-/beer_reviews/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | Y
+/beer_reviews/{beer_review_id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | Y
 /favorites/ |  [GET,HEAD,OPTIONS,(POST)] | Y | 
-/favorites/{id}/  | [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]  |  | Y
-/user_list/favorites/{id}/ |  [GET,HEAD,OPTIONS] | Y |   
-/user_list/beer_contributions/{id}/ |  [GET,HEAD,OPTIONS] | Y |  
-/user_list/beer_reviews/{id}/ |  [GET,HEAD,OPTIONS]  | Y | 
-/beer_list/reviews/{id}/ |  [GET,HEAD,OPTIONS]  | Y | 
-/beer_list/overall/{id}/ |  [GET,HEAD,OPTIONS]  |  | Y 
-/beer_list/favorited_by/{id}/ |  [GET,HEAD,OPTIONS]  | Y | 
+/favorites/{favorite_id}/  | [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]  |  | Y
+/user_list/favorites/{user_id}/ |  [GET,HEAD,OPTIONS] | Y |   
+/user_list/beer_contributions/{user_id}/ |  [GET,HEAD,OPTIONS] | Y |  
+/user_list/beer_reviews/{user_id}/ |  [GET,HEAD,OPTIONS]  | Y | 
+/beer_list/reviews/{beer_id}/ |  [GET,HEAD,OPTIONS]  | Y | 
+/beer_list/overall/{beer_id}/ |  [GET,HEAD,OPTIONS]  |  | Y 
+/beer_list/favorited_by/{beer_id}/ |  [GET,HEAD,OPTIONS]  | Y | 
 
 Ordering
 ========
