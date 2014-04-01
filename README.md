@@ -29,9 +29,13 @@ Install the following packages.
 **Create database:**  
 	sudo su postgres  
 	createdb beer  
-	psql beer  
-	\password admin  
-	(enter password)  
+	$ createuser -P  
+	Enter name of role to add:  admin  
+	Enter password for new role:  admin  
+	Enter it again: admin  
+	Shall the new role be a superuser? (y/n) n  
+	Shall the new role be allowed to create databases? (y/n) y  
+	Shall the new role be allowed to create more new roles? (y/n) n  
 
 **Install connectors:**  
 	sudo apt-get install libpq-dev python-dev  
@@ -55,7 +59,7 @@ Install the following packages.
 **Install [Django Extensions](https://github.com/django-extensions/django-extensions):**  
 	sudo pip install django-extensions  
 
-**Install Django Filter**
+**Install Django Filter**  
 	sudo pip install django-filter
 
 ---
@@ -153,4 +157,15 @@ If needed, configure the database connection settings.
 	        'PORT': '5432',
 	    }
 	}
+
+Craete logging directory and change permissions.  
+------------------------------------------------
+mkdir /home/beer/beer/logs  
+chmod 777 /home/beer/beer/logs  
+
+Run syncdb to create tables
+---------------------------
+
+cd /home/beer/beer/django_beer  
+python manage.py syncdb  
 
