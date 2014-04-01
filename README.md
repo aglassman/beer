@@ -3,6 +3,9 @@ beer
 
 A simple ReST service to manage Milwaukee's favorite beverages.
 
+An example server running this project is currently hosted on the Amazon EC2 Cloud.
+http://beer.tklapp.com/beer_api/
+
 
 Install
 =======
