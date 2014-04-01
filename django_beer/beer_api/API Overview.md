@@ -1,49 +1,44 @@
 Valid URIs
 ==========
 
-URIs marked with * allow deep serialization.  Use ?deep=y GET parameter to return 1 layer of nested objects in the response.
+URIs marked with DEEP ALLOWED can use ?deep=y GET parameter to return 1 layer of nested objects in the response.
 
 Api Root /beer_api [GET,HEAD,OPTIONS]
 
-The following URIs are accessible by:
-	Non-Authenticated users []
-	Authenticated users  [()]
-	Authenticated Admin users [({})]
+The following URIs are accessible by:  
 
-/user_admin/ [({GET,POST,HEAD,OPTIONS})]
-/user_admin/<id>/ [({GET, PUT, PATCH, DELETE, HEAD, OPTIONS})]
-
-/users/ [GET,HEAD,OPTIONS]
-/users/<id>/ [GET,HEAD,OPTIONS]
-/users/<id>/favorites/ [GET,HEAD,OPTIONS] *
-/users/<id>/beer_contributions/ [GET,HEAD,OPTIONS] *
-/users/<id>/beer_reviews/ [GET,HEAD,OPTIONS] *
-
-/styles/ [GET,HEAD,OPTIONS,(POST)]
-/styles/<id>/ [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]
-
-/glass_types/ [GET,HEAD,OPTIONS,(POST)]
-/glass_types/<id>/ [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]
-
-/breweries/ [GET,HEAD,OPTIONS,(POST)]
-/breweries/<id>/ [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]
-
-/beers/ [GET,HEAD,OPTIONS,(POST)]
-/beers/<id>/ [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)] *
-/beers/<id>/reviews/ [GET, HEAD, OPTIONS] *
-/beers/<id>/overall/ [GET, HEAD, OPTIONS] *
-/beers/<id>/favorited_by/ [GET, HEAD, OPTIONS] *
-
-/beer_reviews/ [GET,HEAD,OPTIONS,(POST)]
-/beer_reviews/<id>/ [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)] *
-
-/favorites/ [GET,HEAD,OPTIONS,(POST)]
-/favorites/<id>/ [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)] *
-
+    Non-Authenticated users []  
+	Authenticated users  [()]  
+	Authenticated Admin users [({})]  
+	
+URI | METHOD | ORDER ALLOWED | DEEP ALLOWED
+----|-----|:---------:|:-------:
+/user_admin/ | [({GET,POST,HEAD,OPTIONS})]   | Y | 
+/user_admin/{id}/ | [({GET, PUT, PATCH, DELETE, HEAD, OPTIONS})]   |  | 
+/users/ |  [GET,HEAD,OPTIONS]  | Y |  
+/users/{id}/ |  [GET,HEAD,OPTIONS]   |  | Y
+/styles/ |  [GET,HEAD,OPTIONS,(POST)]   | Y | 
+/styles/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | Y
+/glass_types/  | [GET,HEAD,OPTIONS,(POST)]   | Y | 
+/glass_types/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | 
+/breweries/ |  [GET,HEAD,OPTIONS,(POST)] | Y | 
+/breweries/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)] |  | 
+/beers/ |  [GET,HEAD,OPTIONS,(POST)] | Y | 
+/beers/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]  |  | Y
+/beer_reviews/  | [GET,HEAD,OPTIONS,(POST)] | Y | 
+/beer_reviews/{id}/ |  [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]   |  | Y
+/favorites/ |  [GET,HEAD,OPTIONS,(POST)] | Y | 
+/favorites/{id}/  | [GET, HEAD, OPTIONS, (PUT, PATCH, DELETE)]  |  | Y
+/user_list/favorites/{id}/ |  [GET,HEAD,OPTIONS] | Y |   
+/user_list/beer_contributions/{id}/ |  [GET,HEAD,OPTIONS] | Y |  
+/user_list/beer_reviews/{id}/ |  [GET,HEAD,OPTIONS]  | Y | 
+/beer_list/reviews/{id}/ |  [GET,HEAD,OPTIONS]  | Y | 
+/beer_list/overall/{id}/ |  [GET,HEAD,OPTIONS]  |  | Y 
+/beer_list/favorited_by/{id}/ |  [GET,HEAD,OPTIONS]  | Y | 
 
 Ordering
 ========
-Any GET request can be ordered using get parameters.
+Any GET request that returns a list can be ordered using get parameters.
 
 For example, to order users by username:
 
@@ -62,25 +57,25 @@ Data Format
 
 Examples of json data for post
 
-Style
+    Style
 	{
 	    "style": "", 
 	    "description": ""
 	}
 
-Glass Type
+    Glass Type
 	{
 	    "glass_type": "", 
 	    "description": ""
 	}
 
-Brewery
+    Brewery
 	{
 	    "name": "", 
 	    "brewery_location": ""
 	}
 
-Beer
+    Beer
 	{
 	    "added_by_user": null, 
 	    "name": "", 
@@ -93,7 +88,7 @@ Beer
 	    "description": ""
 	}
 
-Beer Review
+    Beer Review
 	{
 	    "user": null, 
 	    "beer": null, 
@@ -105,7 +100,7 @@ Beer Review
 	    "comments": ""
 	}
 
-User
+    User
 	{
 	    "username": "", 
 	    "email": "", 
@@ -114,7 +109,7 @@ User
 	    "is_active": false
 	}
 
-Favorite
+    Favorite
 	{
 	    "user": 2, 
 	    "beer": 8
